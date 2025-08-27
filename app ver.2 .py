@@ -59,5 +59,6 @@ if st.button("名前を生成（API）"):
 # Googleフォームへのリンクを表示
 st.markdown("---")
 st.markdown("### 評価アンケートはこちら")
-st.markdown("[👉 Googleフォームで評価する](https://forms.gle/xxxxxx)")
+st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
