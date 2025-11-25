@@ -17,7 +17,7 @@ with st.expander("👇 入力条件を開く（ここをタップ）", expanded=
     st.caption("性別や願いを入力してください")# 折りたたみメニューに見出しを表示
 
 # 半角スペース（またはTab）のみにする
-    target_type = st.selectbox("命名する対象", ["人間", "ペット", "キャラクター"])
+    target_type = st.radio("命名する対象", ["人間", "ペット", "キャラクター"])
 
     # 性別をプルダウンで選択
     gender = st.selectbox("性別", ["指定なし", "男", "女"])
@@ -116,6 +116,7 @@ if st.button("名前を生成（API）"):
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
