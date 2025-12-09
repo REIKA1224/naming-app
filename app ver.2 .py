@@ -84,10 +84,10 @@ if submit_btn:
         ---
         """
 
-    # AIに問い合わせ
+# AIに問い合わせ
         with st.spinner("💎 最高の名前を考案中..."):
             try:
-                
+                # API呼び出し
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[
@@ -95,34 +95,37 @@ if submit_btn:
                     ]
                 )
                 
-                # AIの返事を「response_content」という変数に入れる
+                # AIの返事を受け取る
                 response_content = response.choices[0].message.content
 
-                # 完了メッセージと結果表示
+                # 結果表示
                 st.success("命名案が完成しました！")
                 st.markdown("### 📝 提案結果")
                 st.markdown(response_content)
-    # ------------------------------
-    # 生成結果をCSVに保存
-    # ------------------------------
-    df = pd.DataFrame([[
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # 実行時刻
-        gender,                                        # 入力した性別
-        kanji_count,                                   # 入力した漢字数
-        use_kanji,                                     # 入力した使いたい漢字
-        avoid_kanji,                                   # 入力した避けたい漢字
-        wish,                                          # 入力した願い
-        output                                         # AIが生成した名前候補
-    ]], columns=["timestamp", "性別", "漢字数", "使いたい漢字", "避けたい漢字", "願い", "生成候補"])
 
-    # ファイル名を実行日ごとに変更（例：names_api_20250907.csv）
-    filename = f"names_api_{datetime.now().strftime('%Y%m%d')}.csv"
+                # ------------------------------
+                # 生成結果をCSVに保存
+                # ------------------------------
+                # ★ここも try の中にいれるため、インデント（字下げ）が必要です！
+                df = pd.DataFrame([[
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    target_type,
+                    gender,
+                    kanji_count,
+                    use_kanji,
+                    avoid_kanji,
+                    wish,
+                    response_content
+                ]], columns=["timestamp", "対象", "性別", "漢字数", "使いたい漢字", "避けたい漢字", "願い", "生成候補"])
 
-    # CSVに追記モードで保存
-    df.to_csv(filename, index=False, mode="a", header=False, encoding="utf-8-sig")
-
-    # 保存が完了したことをユーザーに通知
-    st.success(f"候補を {filename} に保存しました！")
+                filename = f"names_api_{datetime.now().strftime('%Y%m%d')}.csv"
+                df.to_csv(filename, index=False, mode="a", header=False, encoding="utf-8-sig")
+                
+                st.caption(f"※結果は自動的に {filename} に保存されました")
+            
+            except Exception as e:
+                # エラー時の処理
+                st.error(f"エラーが発生しました: {e}")
     
 
 # ------------------------------
@@ -131,6 +134,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
