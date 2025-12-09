@@ -14,25 +14,6 @@ client = OpenAI()
 # ------------------------------
 # 入力フォーム
 # -----------------------------    
-left_col, center_col, right_col = st.columns([1, 3, 1])
-
-# 👈 左のカラムに画像をおく
-with left_col:
-    # ここに好きな画像のURLを入れてください（縦長がおすすめ）
-    st.image("https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSf60CbBImAmahfkZZ-QvU4ggQ5JZSwN0ajYoniSq5F30_pUHcAwYANo4Kcn4jjCWLa5onfX87954stMxORDiZqXGiEcHcJnzkszAYhzOlG5wWUQT8")
-    st.caption("素敵な名前を")
-
-# 👉 右のカラムに画像をおく
-with right_col:
-    # ここに好きな画像のURLを入れてください
-    st.image("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800")
-    st.caption("AIと一緒に")
-
-# 👇 真ん中のカラムに「Expander（入力フォーム）」をおく
-with center_col:
-    with st.expander("👇 入力条件を開く（ここをタップ）", expanded=True):
-        
-        # --- ここから下はいつもの入力フォーム（インデントに注意！） ---
         
         st.markdown("### 📋 命名の条件")
 
@@ -140,6 +121,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
