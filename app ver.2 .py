@@ -5,7 +5,13 @@ from datetime import datetime   # 日付・時刻を扱う標準ライブラリ
 from openai import OpenAI       # OpenAIのAPIを利用するためのクラス
 
 # タイトルをアプリ画面に表示
-st.title("命名支援ツール")
+# 1. 画像を表示する（ネット上のフリー画像URLを使う例）
+# ※ 自分で用意した画像ファイルがある場合は "image.jpg" のようにファイル名を書きます
+st.image("https://images.unsplash.com/photo-1517849845537-4d257902454a", use_container_width=True)
+
+# その下にタイトル
+st.title("AI 命名支援ツール")
+
 
 # OpenAIのクライアントを初期化
 client = OpenAI()
@@ -117,12 +123,6 @@ if submit_btn:
     # 保存が完了したことをユーザーに通知
     st.success(f"候補を {filename} に保存しました！")
     
-# 1. 画像を表示する（ネット上のフリー画像URLを使う例）
-# ※ 自分で用意した画像ファイルがある場合は "image.jpg" のようにファイル名を書きます
-st.image("https://images.unsplash.com/photo-1517849845537-4d257902454a", use_container_width=True)
-
-# その下にタイトル
-st.title("AI 命名支援ツール")
 
 # ------------------------------
 # 評価アンケートへのリンクを表示
@@ -130,6 +130,7 @@ st.title("AI 命名支援ツール")
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
