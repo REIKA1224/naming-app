@@ -7,13 +7,13 @@ from openai import OpenAI       # OpenAIのAPIを利用するためのクラス
 # タイトルをアプリ画面に表示
 st.title("命名支援ツール")
 
-# OpenAIのクライアントを初期化（環境変数に保存したAPIキーを利用）
+# OpenAIのクライアントを初期化
 client = OpenAI()
 
 # ------------------------------
 # 入力フォーム
 # ------------------------------
-with st.expander("👇 入力条件を開く（ここをタップ）", expanded=True):
+with st.expander("入力条件を開く", expanded=True):
     
     # --------------------------------------------------
     # 1. UI改善 & 苗字・詳細条件の入力
@@ -30,10 +30,10 @@ with st.expander("👇 入力条件を開く（ここをタップ）", expanded=
     with col2:
         gender = st.selectbox("性別", ["指定なし", "男", "女"])
 
-    # 漢字数（スライダーをやめて、セレクトボックスに変更）
+    # 漢字数
     kanji_count = st.selectbox("名前の漢字数", ["指定なし", "1文字", "2文字", "3文字"])
 
-    # 使いたい漢字・避けたい漢字（横並びで見やすく）
+    # 使いたい漢字・避けたい漢字
     col3, col4 = st.columns(2)
     with col3:
         use_kanji = st.text_input("使いたい漢字", placeholder="例：翔、愛")
@@ -85,25 +85,16 @@ if submit_btn:
 
         # AIに問い合わせ
         with st.spinner("💎 最高の名前を考案中..."):
-            # ここは既存のコードと同じ（OpenAIを呼ぶ部分）
-            # ※ client.chat.completions.create(...) の部分はそのまま使ってください
-            # ...
-            # ...
-            
-            # --- ここから下は「表示部分」の改良案です ---
+
             # response_content = ... (AIの返事を受け取った後)
 
             st.success("命名案が完成しました！")
             
-            # AIの回答を表示（カード風に見せるUIテクニック）
-            # 「---」で区切ってリスト化して表示する例
+            # AIの回答を表示
             import re
-            
-            # AIの回答をそのまま表示しても良いですが、
-            # せっかくなのでランクを強調して表示します
-            
+    
             st.markdown("### 📝 提案結果")
-            st.markdown(response_content) # とりあえずそのまま出す（確実）
+            st.markdown(response_content) 
     # ------------------------------
     # 生成結果をCSVに保存
     # ------------------------------
@@ -120,7 +111,7 @@ if submit_btn:
     # ファイル名を実行日ごとに変更（例：names_api_20250907.csv）
     filename = f"names_api_{datetime.now().strftime('%Y%m%d')}.csv"
 
-    # CSVに追記モードで保存（utf-8-sigでExcelでも文字化けしない）
+    # CSVに追記モードで保存
     df.to_csv(filename, index=False, mode="a", header=False, encoding="utf-8-sig")
 
     # 保存が完了したことをユーザーに通知
@@ -132,6 +123,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
