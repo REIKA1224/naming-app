@@ -14,8 +14,7 @@ client = OpenAI()
 # ------------------------------
 # 入力フォーム
 # -----------------------------    
-        
-        st.markdown("### 📋 命名の条件")
+st.markdown("### 📋 命名の条件")
 
         # ジャンル選択
         target_type = st.radio("命名する対象", ["人間", "ペット", "キャラクター"], horizontal=True)
@@ -121,6 +120,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
