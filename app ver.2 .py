@@ -116,14 +116,13 @@ if submit_btn:
 
     # 保存が完了したことをユーザーに通知
     st.success(f"候補を {filename} に保存しました！")
+    
+# 1. 画像を表示する（ネット上のフリー画像URLを使う例）
+# ※ 自分で用意した画像ファイルがある場合は "image.jpg" のようにファイル名を書きます
+st.image("https://images.unsplash.com/photo-1517849845537-4d257902454a", use_container_width=True)
 
-# 生成ボタンの下あたりに追加
-if not submit_btn:
-    # まだボタンが押されていない時に表示する画像
-    st.markdown("---")
-    col1, col2, col3 = st.columns([1, 2, 1]) # 真ん中に表示するための工夫
-    with col2:
-        st.image("https://cdn-icons-png.flaticon.com/512/3750/3750593.png", caption="素敵な名前を見つけましょう！", width=200)
+# その下にタイトル
+st.title("AI 命名支援ツール")
 
 # ------------------------------
 # 評価アンケートへのリンクを表示
@@ -131,6 +130,7 @@ if not submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
