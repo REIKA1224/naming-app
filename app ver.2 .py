@@ -4,11 +4,6 @@ import pandas as pd             # 表形式データ（DataFrame）を扱うラ�
 from datetime import datetime   # 日付・時刻を扱う標準ライブラリ
 from openai import OpenAI       # OpenAIのAPIを利用するためのクラス
 
-# タイトルをアプリ画面に表示
-# 1. 画像を表示する（ネット上のフリー画像URLを使う例）
-# ※ 自分で用意した画像ファイルがある場合は "image.jpg" のようにファイル名を書きます
-st.image("https://images.unsplash.com/photo-1517849845537-4d257902454a", use_container_width=True)
-
 # その下にタイトル
 st.title("AI 命名支援ツール")
 
@@ -130,6 +125,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
