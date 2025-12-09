@@ -121,7 +121,7 @@ if submit_btn:
                 
                 # ★ここが修正箇所です（インデントを合わせて、枠の中に文字を入れる）
                 with st.container(border=True):
-                    st.write(response_content)
+                    st.markdown(response_content.replace("\n", "  \n"))
 
                 # ------------------------------
                 # 生成結果をCSVに保存
@@ -151,6 +151,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
