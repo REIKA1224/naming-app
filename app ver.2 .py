@@ -15,7 +15,7 @@ client = OpenAI()
 # 入力フォーム
 # -----------------------------    
 # サイドバーではなく、メイン画面上部に折りたたみメニューとして配置
-with st.expander("👇 入力条件を開く（ここをタップ）", expanded=True):
+with st.expander("入力条件を開く", expanded=True):
     
     # --------------------------------------------------
     # 1. UI改善 & 苗字・詳細条件の入力
@@ -125,6 +125,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
