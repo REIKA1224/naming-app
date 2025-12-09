@@ -74,6 +74,10 @@ if submit_btn:
         2. 【字面】漢字の並びの美しさ、画数のバランス
         3. 【独創性】ありきたりすぎず、かつキラキラネームすぎないか
 
+        【重要】
+        出力時は「**」などの太字記号や見出し記号（###）は一切使わず、
+        普通のテキストだけで出力してください。
+
         【条件】
         ・対象：{target_type}
         ・性別：{gender}
@@ -83,7 +87,7 @@ if submit_btn:
         ・願い：{wish}
         
         【出力形式】
-        **太字記号は使わず**、以下の形式で出力すること。
+        必ず以下の形式で出力すること。
 
         ---
         名前：〇〇（ヨミ）
@@ -115,9 +119,9 @@ if submit_btn:
                 st.success("命名案が完成しました！")
                 st.markdown("### 📝 提案結果と分析")
                 
-               # st.write を右にズラす
-with st.container(border=True):
-    st.write(response_content)
+                # ★ここが修正箇所です（インデントを合わせて、枠の中に文字を入れる）
+                with st.container(border=True):
+                    st.write(response_content)
 
                 # ------------------------------
                 # 生成結果をCSVに保存
@@ -147,6 +151,7 @@ with st.container(border=True):
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
