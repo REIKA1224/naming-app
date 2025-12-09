@@ -84,18 +84,24 @@ if submit_btn:
         ---
         """
 
-        # AIに問い合わせ
+    # AIに問い合わせ
         with st.spinner("💎 最高の名前を考案中..."):
+            try:
+                
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "user", "content": prompt}
+                    ]
+                )
+                
+                # AIの返事を「response_content」という変数に入れる
+                response_content = response.choices[0].message.content
 
-            # response_content = ... (AIの返事を受け取った後)
-
-            st.success("命名案が完成しました！")
-            
-            # AIの回答を表示
-            import re
-    
-            st.markdown("### 📝 提案結果")
-            st.markdown(response_content) 
+                # 完了メッセージと結果表示
+                st.success("命名案が完成しました！")
+                st.markdown("### 📝 提案結果")
+                st.markdown(response_content)
     # ------------------------------
     # 生成結果をCSVに保存
     # ------------------------------
@@ -125,6 +131,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
