@@ -115,9 +115,9 @@ if submit_btn:
                 st.success("命名案が完成しました！")
                 st.markdown("### 📝 提案結果と分析")
                 
-                # st.info(response_content) をこれに変える
-                with st.container(border=True):
-                st.write(response_content)
+               # st.write を右にズラす
+               with st.container(border=True):
+                  st.write(response_content)
 
                 # ------------------------------
                 # 生成結果をCSVに保存
@@ -147,6 +147,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
