@@ -19,13 +19,13 @@ left_col, center_col, right_col = st.columns([1, 3, 1])
 # 👈 左のカラムに画像をおく
 with left_col:
     # ここに好きな画像のURLを入れてください（縦長がおすすめ）
-    st.image("https://cdn-icons-png.flaticon.com/512/2921/2921222.png", use_container_width=True)
+    st.image("https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcSU2CHeo6RaK_z30-CyHGQTngkzvZKe_8NZhAjyfTpQ599KnaU1rF6DolLEHSLbjJCKZTFy7QYZMThnSPGY_9plfrIttLPeiW-H8Nm-95UCwQK8vkU)
     st.caption("素敵な名前を")
 
 # 👉 右のカラムに画像をおく
 with right_col:
     # ここに好きな画像のURLを入れてください
-    st.image("https://cdn-icons-png.flaticon.com/512/2921/2921222.png", use_container_width=True)
+    st.image("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800)
     st.caption("AIと一緒に")
 
 # 👇 真ん中のカラムに「Expander（入力フォーム）」をおく
@@ -140,6 +140,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
