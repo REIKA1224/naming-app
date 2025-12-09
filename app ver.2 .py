@@ -117,12 +117,21 @@ if submit_btn:
     # 保存が完了したことをユーザーに通知
     st.success(f"候補を {filename} に保存しました！")
 
+# 生成ボタンの下あたりに追加
+if not submit_btn:
+    # まだボタンが押されていない時に表示する画像
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1]) # 真ん中に表示するための工夫
+    with col2:
+        st.image("https://cdn-icons-png.flaticon.com/512/3750/3750593.png", caption="素敵な名前を見つけましょう！", width=200)
+
 # ------------------------------
 # 評価アンケートへのリンクを表示
 # ------------------------------
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
