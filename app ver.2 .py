@@ -14,7 +14,7 @@ client = OpenAI()
 # ------------------------------
 # 入力フォーム
 # -----------------------------    
-    left_col, center_col, right_col = st.columns([1, 3, 1])
+left_col, center_col, right_col = st.columns([1, 3, 1])
 
 # 👈 左のカラムに画像をおく
 with left_col:
@@ -140,6 +140,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
