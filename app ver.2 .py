@@ -15,19 +15,29 @@ client = OpenAI()
 # ------------------------------
 st.markdown("### 📋 命名の条件")
 
-# 名前と性別を横並びにする（UI改善）
-col1, col2 = st.columns(2)
-with col1:
-    surname = st.text_input("苗字（省略可）", placeholder="例：佐藤")
-with col2:
-    gender = st.selectbox("性別", ["男", "女", "指定なし"])
+    # ジャンル選択（横並びにする）
+    target_type = st.radio("命名する対象", ["人間", "ペット", "キャラクター"], horizontal=True)
 
-# スライダーなどを少し見やすく配置
-kanji_count = st.slider("名前の漢字数（目安）", 1, 3, 2)
-wish = st.text_area("どんな願いを込めますか？", placeholder="例：優しくて芯の強い子に育ってほしい、春生まれなので春っぽい漢字を使いたい")
+    # 苗字と性別を横並びにする
+    col1, col2 = st.columns(2)
+    with col1:
+        surname = st.text_input("苗字（省略可）", placeholder="例：佐藤")
+    with col2:
+        gender = st.selectbox("性別", ["指定なし", "男", "女"])
 
-# 生成ボタンのデザイン調整
-submit_btn = st.button("✨ AIに名前を考えてもらう", use_container_width=True, type="primary")
+    # 漢字数（スライダーをやめて、セレクトボックスに変更）
+    # これで「指定なし」が選べるようになります
+    kanji_count = st.selectbox("名前の漢字数", ["指定なし", "1文字", "2文字", "3文字"])
+
+    # 【復活】使いたい漢字・避けたい漢字（横並びで見やすく）
+    col3, col4 = st.columns(2)
+    with col3:
+        use_kanji = st.text_input("使いたい漢字", placeholder="例：翔、愛")
+    with col4:
+        avoid_kanji = st.text_input("避けたい漢字", placeholder="例：悪、死")
+
+    # 願いの入力
+    wish = st.text_area("どんな願いを込めますか？", placeholder="例：優しくて芯の強い子に育ってほしい、春生まれなので春っぽい漢字を使いたい")
 
 # --------------------------------------------------
 # 2. プロンプト（AIへの指示）の変更
@@ -115,6 +125,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
