@@ -17,29 +17,31 @@ client = OpenAI()
 # 入力フォーム
 # -----------------------------    
 # サイドバーではなく、メイン画面上部に折りたたみメニューとして配置
-with st.expander("入力条件を開く", expanded=True):
+# ------------------------------
+# 入力フォーム
+# ------------------------------    
+with st.expander("👇 入力条件を開く（ここをタップ）", expanded=True):
     
-    # --------------------------------------------------
-    # 1. UI改善 & 苗字・詳細条件の入力
-    # --------------------------------------------------
     st.markdown("### 📋 命名の条件")
 
-    # ジャンル選択（横並びにする）
+    # ジャンル選択
     target_type = st.radio("命名する対象", ["人間", "ペット", "キャラクター"], horizontal=True)
 
-    # 苗字と性別を横並びにする
+    # 苗字と性別
     col1, col2 = st.columns(2)
     with col1:
         surname = st.text_input("苗字（省略可）", placeholder="例：佐藤")
     with col2:
         gender = st.selectbox("性別", ["指定なし", "男", "女"])
 
-    # 使いたい漢字・避けたい漢字（横並びで見やすく）
+    # ★ここに「漢字数」がありましたが、削除しました
+
+    # 使いたい漢字・避けたい漢字
     col3, col4 = st.columns(2)
     with col3:
-        use_kanji = st.text_input("使いたいワード", placeholder="例：翔、愛")
+        use_kanji = st.text_input("使いたい漢字", placeholder="例：翔、愛")
     with col4:
-        avoid_kanji = st.text_input("避けたいワード", placeholder="例：悪、死")
+        avoid_kanji = st.text_input("避けたい漢字", placeholder="例：悪、死")
 
     # 願いの入力
     wish = st.text_area("どんな願いを込めますか？", placeholder="例：優しくて芯の強い子に育ってほしい")
@@ -52,6 +54,9 @@ with st.expander("入力条件を開く", expanded=True):
 # --------------------------------------------------
 # 2. プロンプト（AIへの指示）の実行と表示
 # --------------------------------------------------
+# --------------------------------------------------
+# 2. プロンプト（AIへの指示）の実行と表示
+# --------------------------------------------------
 if submit_btn:
     if not wish:
         st.warning("「願い」を入力してください！")
@@ -59,23 +64,29 @@ if submit_btn:
         surname_text = f"苗字「{surname}」" if surname else "苗字なし"
 
         # -------------------------------------------------------
-        # プロンプト：5項目で採点させる
+        # プロンプト作成（漢字数を削除済み）
         # -------------------------------------------------------
         prompt = f"""
-        あなたは辛口かつ的確なプロの命名アドバイザーです。
+        あなたはあらゆる国や世界観に対応できる、柔軟なプロの命名アドバイザーです。
         以下の条件に基づいて、名前を3つ提案してください。
-        漢字を使用する際の音読み、訓読み、等は不問です。貴方が考える最も良いと思う案にしてください。
-        また、願いで人種や出身国が指定されている時はその地域の文化に根差した名前にしてください。
         
+        【最重要：世界観の優先】
+        ユーザーの「願い」の中に、「アメリカ人」「ファンタジー」「異世界」などの
+        **特定の国や世界観の指定**がある場合は、日本の一般的な名前に固執しないでください。
+        その文化圏らしい名前（例：ジョン、ミカエル、アーサーなど）を提案してください。
+        
+        ※その際、出力は「カタカナ」でも構いません。
+        ※漢字の指定がある場合は、その響きに合った「当て字」を使ってください。
+
         【重要：評価システム】
         提案する名前について、以下の5項目で厳密に採点（各100点満点）してください。
         全てを高得点にせず、厳密な基準でフラットに項目の特徴に合わせてメリハリをつけてください。
 
-        1. 【響き】呼んだ時のリズム、苗字との語呂
-        2. 【字形】漢字のバランス、見た目の美しさ
+        1. 【響き】呼んだ時のリズム、苗字との語呂（外国名ならその国らしい響きか）
+        2. 【字形】漢字のバランス、見た目の美しさ（カタカナなら文字の並び）
         3. 【独創】ユニークさ、被りにくさ
         4. 【可読】誰でも読めるか（独創性が高いと下がりやすい）
-        5. 【願い】ユーザーの願いと合致しているか
+        5. 【願い】ユーザーの願い（国籍や職業の設定）と合致しているか
 
         【重要】
         出力時は「**」などの太字記号や見出し記号（###）は一切使わず、
@@ -104,7 +115,7 @@ if submit_btn:
         ---
         """
 
-        with st.spinner("💎 5つの観点から厳密に分析中..."):
+        with st.spinner("💎 世界観に合わせて分析中..."):
             try:
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
@@ -121,30 +132,24 @@ if submit_btn:
                     if "名前：" not in section:
                         continue
                     
-                    # ------------------------------------------------
-                    # 1. 正規表現で5つの点数を抜き出す
-                    # ------------------------------------------------
-                    name_match = re.search(r"名前：(.*?)\n", section)
-                    
-                    # 5つの項目を取得（なければ0点）
-                    s_hibiki = int(re.search(r"響き：(\d+)点", section).group(1)) if re.search(r"響き：(\d+)点", section) else 50
-                    s_jikei  = int(re.search(r"字形：(\d+)点", section).group(1)) if re.search(r"字形：(\d+)点", section) else 50
-                    s_doku   = int(re.search(r"独創：(\d+)点", section).group(1)) if re.search(r"独創：(\d+)点", section) else 50
-                    s_kadoku = int(re.search(r"可読：(\d+)点", section).group(1)) if re.search(r"可読：(\d+)点", section) else 50
-                    s_negai  = int(re.search(r"願い：(\d+)点", section).group(1)) if re.search(r"願い：(\d+)点", section) else 50
+                    # 5つの項目を取得
+                    def get_score(pattern, text):
+                        match = re.search(pattern, text)
+                        return int(match.group(1)) if match else 50
 
+                    s_hibiki = get_score(r"響き：(\d+)点", section)
+                    s_jikei  = get_score(r"字形：(\d+)点", section)
+                    s_doku   = get_score(r"独創：(\d+)点", section)
+                    s_kadoku = get_score(r"可読：(\d+)点", section)
+                    s_negai  = get_score(r"願い：(\d+)点", section)
+
+                    name_match = re.search(r"名前：(.*?)\n", section)
                     if name_match:
                         name = name_match.group(1).strip()
                         
-                        # ------------------------------------------------
-                        # 2. 五角形のレーダーチャートを作成
-                        # ------------------------------------------------
-                        # 項目名
+                        # 五角形のレーダーチャートを作成
                         categories = ['響き', '字形', '独創', '可読', '願い']
-                        # 値
                         values = [s_hibiki, s_jikei, s_doku, s_kadoku, s_negai]
-                        
-                        # 閉じるために最初の値を最後に追加
                         values += [values[0]]
                         categories += [categories[0]]
 
@@ -155,7 +160,7 @@ if submit_btn:
                                     theta=categories,
                                     fill='toself',
                                     name=name,
-                                    line_color='#00CC96' # エメラルドグリーン（今風の色）
+                                    line_color='#00CC96'
                                 )
                             ]
                         )
@@ -169,37 +174,33 @@ if submit_btn:
                             margin=dict(t=30, b=30, l=40, r=40)
                         )
 
-                        # ------------------------------------------------
-                        # 3. 表示
-                        # ------------------------------------------------
+                        # 表示
                         with st.container(border=True):
-                            col_text, col_graph = st.columns([1, 1]) # 半々にする
-                            
+                            col_text, col_graph = st.columns([1, 1])
                             with col_text:
                                 st.markdown(f"### {name}")
-                                # 分析テキストを表示
                                 st.markdown(section.replace("\n", "  \n"))
-                            
                             with col_graph:
                                 st.plotly_chart(fig, use_container_width=True)
 
-                # CSV保存処理（中略せず書くなら以下の通り）
+                # CSV保存処理（漢字数を削除）
                 df = pd.DataFrame([[
                     datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     target_type, gender, use_kanji, avoid_kanji, wish, response_content
                 ]], columns=["timestamp", "対象", "性別", "使いたい漢字", "避けたい漢字", "願い", "生成候補"])
+                
                 filename = f"names_api_{datetime.now().strftime('%Y%m%d')}.csv"
                 df.to_csv(filename, index=False, mode="a", header=False, encoding="utf-8-sig")
 
             except Exception as e:
                 st.error(f"エラーが発生しました: {e}")
-
 # ------------------------------
 # 評価アンケートへのリンクを表示
 # ------------------------------
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
