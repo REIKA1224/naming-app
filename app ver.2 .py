@@ -184,8 +184,8 @@ if submit_btn:
                 # CSV保存処理（中略せず書くなら以下の通り）
                 df = pd.DataFrame([[
                     datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    target_type, gender, kanji_count, use_kanji, avoid_kanji, wish, response_content
-                ]], columns=["timestamp", "対象", "性別", "漢字数", "使いたい漢字", "避けたい漢字", "願い", "生成候補"])
+                    target_type, gender, use_kanji, avoid_kanji, wish, response_content
+                ]], columns=["timestamp", "対象", "性別", "使いたい漢字", "避けたい漢字", "願い", "生成候補"])
                 filename = f"names_api_{datetime.now().strftime('%Y%m%d')}.csv"
                 df.to_csv(filename, index=False, mode="a", header=False, encoding="utf-8-sig")
 
@@ -198,6 +198,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
