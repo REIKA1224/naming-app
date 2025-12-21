@@ -255,3 +255,4 @@ st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)
 
 
 
+
