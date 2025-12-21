@@ -3,6 +3,8 @@ import streamlit as st          # Webアプリを作るためのフレームワ�
 import pandas as pd             # 表形式データ（DataFrame）を扱うライブラリ。CSV保存に使用
 from datetime import datetime   # 日付・時刻を扱う標準ライブラリ
 from openai import OpenAI       # OpenAIのAPIを利用するためのクラス
+import plotly.graph_objects as go  # グラフを描くためのライブラリ
+import re                          # 文字の中から数字を抜き出すためのライブラリ
 
 # その下にタイトル
 st.title("AI 命名支援ツール")
@@ -116,12 +118,86 @@ if submit_btn:
                 response_content = response.choices[0].message.content
 
                 # 結果表示
+                # 結果表示
                 st.success("命名案が完成しました！")
                 st.markdown("### 📝 提案結果と分析")
-                
-                # ★ここが修正箇所です（インデントを合わせて、枠の中に文字を入れる）
-                with st.container(border=True):
-                    st.markdown(response_content.replace("\n", "  \n"))
+
+                # AIの回答を「---」で区切って、ひとつずつ処理する
+                # （AIが複数の候補を出してくるため）
+                sections = response_content.split('---')
+
+                for section in sections:
+                    # 空っぽのセクションは飛ばす
+                    if "名前：" not in section:
+                        continue
+                    
+                    # ------------------------------------------------
+                    # 1. 正規表現で「名前」と「各点数」を抜き出す
+                    # ------------------------------------------------
+                    name_match = re.search(r"名前：(.*?)\n", section)
+                    goro_match = re.search(r"語呂：(\d+)点", section)
+                    jimen_match = re.search(r"字面：(\d+)点", section)
+                    doku_match = re.search(r"独創性：(\d+)点", section)
+
+                    # 名前が見つかったら表示処理スタート
+                    if name_match:
+                        name = name_match.group(1).strip()
+                        
+                        # 点数が取れたら数字に変換、取れなかったら0点にする（エラー防止）
+                        score_goro = int(goro_match.group(1)) if goro_match else 0
+                        score_jimen = int(jimen_match.group(1)) if jimen_match else 0
+                        score_doku = int(doku_match.group(1)) if doku_match else 0
+                        
+                        # ------------------------------------------------
+                        # 2. レーダーチャートを作成（Plotly）
+                        # ------------------------------------------------
+                        categories = ['語呂', '字面', '独創性']
+                        values = [score_goro, score_jimen, score_doku]
+                        
+                        # グラフのデータを閉じるために、最初の値を最後にもう一度入れる
+                        values += [values[0]]
+                        categories += [categories[0]]
+
+                        fig = go.Figure(
+                            data=[
+                                go.Scatterpolar(
+                                    r=values,
+                                    theta=categories,
+                                    fill='toself',
+                                    name=name,
+                                    line_color='#1E90FF' # 水色
+                                )
+                            ]
+                        )
+
+                        # グラフのデザイン調整
+                        fig.update_layout(
+                            polar=dict(
+                                radialaxis=dict(
+                                    visible=True,
+                                    range=[0, 100] # 0点〜100点の範囲
+                                )
+                            ),
+                            showlegend=False,
+                            height=300, # グラフの高さ
+                            margin=dict(t=30, b=30, l=30, r=30) # 余白
+                        )
+
+                        # ------------------------------------------------
+                        # 3. 画面に表示（左に文字、右にグラフ）
+                        # ------------------------------------------------
+                        with st.container(border=True):
+                            col_text, col_graph = st.columns([3, 2])
+                            
+                            with col_text:
+                                # 名前を大きく表示
+                                st.markdown(f"### {name}")
+                                # 説明文を表示（改行ズレ対策済み）
+                                st.markdown(section.replace("\n", "  \n"))
+                            
+                            with col_graph:
+                                # 作ったグラフを表示
+                                st.plotly_chart(fig, use_container_width=True)
 
                 # ------------------------------
                 # 生成結果をCSVに保存
@@ -151,6 +227,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
