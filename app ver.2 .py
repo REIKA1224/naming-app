@@ -37,9 +37,9 @@ with st.expander("入力条件を開く", expanded=True):
     # 使いたい漢字・避けたい漢字（横並びで見やすく）
     col3, col4 = st.columns(2)
     with col3:
-        use_kanji = st.text_input("使いたい漢字", placeholder="例：翔、愛")
+        use_kanji = st.text_input("使いたいワード", placeholder="例：翔、愛")
     with col4:
-        avoid_kanji = st.text_input("避けたい漢字", placeholder="例：悪、死")
+        avoid_kanji = st.text_input("避けたいワード", placeholder="例：悪、死")
 
     # 願いの入力
     wish = st.text_area("どんな願いを込めますか？", placeholder="例：優しくて芯の強い子に育ってほしい")
@@ -198,6 +198,7 @@ if submit_btn:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
