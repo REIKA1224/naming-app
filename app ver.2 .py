@@ -183,37 +183,36 @@ if submit_btn:
                             margin=dict(t=30, b=30, l=40, r=40)
                         )
 
-                        # 表示
-                        with st.container(border=True):
-                            col_text, col_graph = st.columns([1, 1])
-                            with col_text:
-                                st.markdown(f"### {name}")
-                                st.markdown(section.replace("\n", "  \n"))
-                            with col_graph:
-                                st.plotly_chart(fig, use_container_width=True)
+                       # 表示
+                    with st.container(border=True):
+                        col_text, col_graph = st.columns([1, 1])
+                        with col_text:
+                            st.markdown(f"### {name}")
+                            st.markdown(section.replace("\n", "  \n"))
+                        with col_graph:
+                            st.plotly_chart(fig, use_container_width=True)
 
-                # CSV保存処理
-                df = pd.DataFrame([[
-                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    target_type, gender, use_kanji, avoid_kanji, wish, response_content
-                ]], columns=["timestamp", "対象", "性別", "使いたい漢字", "避けたい漢字", "願い", "生成候補"])
-                
-                filename = f"names_api_{datetime.now().strftime('%Y%m%d')}.csv"
-                df.to_csv(filename, index=False, mode="a", header=False, encoding="utf-8-sig")
+                    # --------------------------------------------------
+                    # 修正箇所: ここに「データの追加処理」を移動します
+                    # インデント（字下げ）を上の行と合わせるのが重要です！
+                    # --------------------------------------------------
+                    current_data = {
+                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "対象": target_type,
+                        "名前": name,  # ここなら name が存在するのでエラーになりません
+                        "生成候補": section # 修正: response_content全体ではなく、個別の結果(section)を保存
+                    }
+                    st.session_state.generated_names.append(current_data)
+                    # --------------------------------------------------
 
-            except Exception as e:
-                st.error(f"エラーが発生しました: {e}")
+            # 元々あったCSV保存処理（df.to_csv...）は削除するかコメントアウトしてください
 
-# データの追加処理
-current_data = {
-    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    "対象": target_type,
-    "名前": name, # 名前も保存したほうが良いでしょう
-    "生成候補": response_content
-}
-st.session_state.generated_names.append(current_data)
+        except Exception as e:
+            st.error(f"エラーが発生しました: {e}")
 
-# サイドバーなどでダウンロードボタンを設置
+# --------------------------------------------------
+# ダウンロードボタンの表示（ここは if submit_btn の外側、コードの最後の方でOK）
+# --------------------------------------------------
 if st.session_state.generated_names:
     df_log = pd.DataFrame(st.session_state.generated_names)
     csv = df_log.to_csv(index=False).encode('utf-8-sig')
@@ -230,6 +229,7 @@ if st.session_state.generated_names:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
