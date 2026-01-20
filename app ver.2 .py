@@ -124,7 +124,7 @@ if submit_btn:
         ---
         """
 
-        with st.spinner("💎 苗字と世界観に合わせて分析中..."):
+with st.spinner("💎 苗字と世界観に合わせて分析中..."):
             try:
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
@@ -183,68 +183,33 @@ if submit_btn:
                             margin=dict(t=30, b=30, l=40, r=40)
                         )
 
-                       # 表示
-                    with st.container(border=True):
-                        col_text, col_graph = st.columns([1, 1])
-                        with col_text:
-                            st.markdown(f"### {name}")
-                            st.markdown(section.replace("\n", "  \n"))
-                        with col_graph:
-                            st.plotly_chart(fig, use_container_width=True)
+                        # 表示
+                        with st.container(border=True):
+                            col_text, col_graph = st.columns([1, 1])
+                            with col_text:
+                                st.markdown(f"### {name}")
+                                st.markdown(section.replace("\n", "  \n"))
+                            with col_graph:
+                                st.plotly_chart(fig, use_container_width=True)
 
-                    # --------------------------------------------------
-                    # 修正箇所: ここに「データの追加処理」を移動します
-                    # インデント（字下げ）を上の行と合わせるのが重要です！
-                    # --------------------------------------------------
-                    current_data = {
-                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                        "対象": target_type,
-                        "名前": name,  # ここなら name が存在するのでエラーになりません
-                        "生成候補": section # 修正: response_content全体ではなく、個別の結果(section)を保存
-                    }
-                    st.session_state.generated_names.append(current_data)
-                    # --------------------------------------------------
+                        # ★ここに保存処理（インデントに注意）
+                        current_data = {
+                            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                            "対象": target_type,
+                            "名前": name,
+                            "生成候補": section
+                        }
+                        st.session_state.generated_names.append(current_data)
 
-            # 元々あったCSV保存処理（df.to_csv...）は削除するかコメントアウトしてください
-try:
-                # APIを呼ぶ
-                response = ...
-                
-                # ループ処理
-                for section in sections:
-                    # ...
-                    
-                    # ★修正箇所：保存処理もしっかりインデント（右に寄せる）して try の中に含める
-                    current_data = {
-                        "timestamp": ...,
-                        "名前": name,
-                        "生成候補": section
-                    }
-                    st.session_state.generated_names.append(current_data)
-
-            # ▼ try と同じ縦ラインに except を置く
             except Exception as e:
                 st.error(f"エラーが発生しました: {e}")
-
-# --------------------------------------------------
-# ダウンロードボタンの表示（ここは if submit_btn の外側、コードの最後の方でOK）
-# --------------------------------------------------
-if st.session_state.generated_names:
-    df_log = pd.DataFrame(st.session_state.generated_names)
-    csv = df_log.to_csv(index=False).encode('utf-8-sig')
-    
-    st.sidebar.download_button(
-        label="履歴をCSVでダウンロード",
-        data=csv,
-        file_name=f"naming_log_{datetime.now().strftime('%Y%m%d')}.csv",
-        mime='text/csv',
-    )
 # ------------------------------
 # 評価アンケートへのリンクを表示
 # ------------------------------
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
