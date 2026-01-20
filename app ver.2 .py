@@ -161,13 +161,23 @@ if submit_btn:
                     yomi = item["yomi"]
                     reason = item["reason"]
                     scores = item["scores"]
+# --------------------------------------------------
+                    # 修正：キーが日本語でも英語でも対応できるようにする
+                    # --------------------------------------------------
+                    # .get("英語", .get("日本語", 50)) の順で探します
+                    s_hibiki = scores.get("hibiki", scores.get("響き", 50))
+                    s_jikei  = scores.get("jikei",  scores.get("字形", 50))
+                    s_doku   = scores.get("doku",   scores.get("独創", 50))
+                    s_kadoku = scores.get("kadoku", scores.get("可読", 50))
+                    s_negai  = scores.get("negai",  scores.get("願い", 50))
 
                     # レーダーチャート作成
                     categories = ['響き', '字形', '独創', '可読', '願い']
-                    values = [
-                        scores["hibiki"], scores["jikei"], scores["doku"], 
-                        scores["kadoku"], scores["negai"]
-                    ]
+                    values = [s_hibiki, s_jikei, s_doku, s_kadoku, s_negai]
+                    
+                    # 閉じた多角形にするために最初の値を最後に追加
+                    values += [values[0]]
+                    categories += [categories[0]]
                     values += [values[0]]
                     categories += [categories[0]]
 
@@ -229,6 +239,7 @@ if st.session_state.generated_names:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
