@@ -6,6 +6,8 @@ from datetime import datetime   # 日付・時刻を扱う標準ライブラリ
 from openai import OpenAI       # OpenAIのAPIを利用するためのクラス
 import plotly.graph_objects as go  # グラフを描くためのライブラリ
 import re                          # 文字の中から数字を抜き出すためのライブラリ
+import json   # JSONデータを扱うためのライブラリ（追加）
+import base64 # 画像をテキストデータに変換するためのライブラリ（追加）
 
 # セッション状態でデータを保持（アプリがリロードされるまで維持）
 if 'generated_names' not in st.session_state:
@@ -49,159 +51,165 @@ with st.expander("👇 入力条件を開く（ここをタップ）", expanded=
 
     # 生成ボタン
     submit_btn = st.button("✨ AIに名前を考えてもらう", use_container_width=True, type="primary")
+# 画像アップロード機能（追加機能 3）
+    uploaded_file = st.file_uploader("📸 写真やイラストからイメージする（任意）", type=['png', 'jpg', 'jpeg'])
+
+    # 生成ボタン
+    submit_btn = st.button("✨ AIに名前を考えてもらう", use_container_width=True, type="primary")
+
 # --------------------------------------------------
 # 2. プロンプト（AIへの指示）と生成処理
 # --------------------------------------------------
 if submit_btn:
-    if not wish:
-        st.warning("「願い」を入力してください！")
+    if not wish and not uploaded_file: # 画像も願いもなければ警告
+        st.warning("「願い」を入力するか、「画像」をアップロードしてください！")
     else:
-        # 苗字の有無で指示を変える
-        if surname:
-            surname_instruction = f"【重要】苗字は「{surname}」です。この苗字とつなげた時の響きが良い名前を考えてください。"
-        else:
-            surname_instruction = "苗字は入力されていないため、下の名前のみを提案してください。"
+        # -------------------------------------------------------
+        # 画像の処理（Base64エンコード）
+        # -------------------------------------------------------
+        image_data_url = None
+        if uploaded_file:
+            # 画像を読み込んでBase64文字列に変換
+            encoded_image = base64.b64encode(uploaded_file.read()).decode('utf-8')
+            image_data_url = f"data:image/jpeg;base64,{encoded_image}"
+            st.info("📸 画像のイメージも考慮して名前を考えます！")
 
         # -------------------------------------------------------
-        # プロンプト定義（ここが消えていたのが原因です）
+        # プロンプト定義：JSON形式を強制（追加機能 1）
         # -------------------------------------------------------
+        if surname:
+            surname_instruction = f"苗字は「{surname}」です。"
+        else:
+            surname_instruction = "苗字はありません。"
+
         prompt = f"""
         あなたはプロの命名アドバイザーです。
         以下の条件に基づいて、最適な名前を3つ提案してください。
 
-        【重要：苗字の扱い】
-        {surname_instruction}
-
-        【最重要：文字種（漢字・カタカナ）の判断基準】
-        入力された「苗字」と「願い（世界観）」を見て、名前の文字種を自動で切り替えてください。
-        1. 苗字が「カタカナ」の場合：下の名前も「カタカナ」
-        2. 苗字が「漢字」の場合：基本は「漢字」。「アメリカ人風」等の指定があればカタカナも可。
-        3. 苗字なし・ファンタジー：世界観に合わせて自由選択
-
-        【重要：評価システム】
-        以下の5項目で厳密に採点（各100点満点）してください。
-        **「響き」の点数は、苗字（{surname}）とつなげた時のリズムで採点**してください。
-        （ただし、出力する文字には苗字を含めないでください）
-
-        1. 【響き】呼んだ時のリズム、苗字との語呂
-        2. 【字形】文字の並びの美しさ
-        3. 【独創】ユニークさ、被りにくさ
-        4. 【可読】誰でも読めるか
-        5. 【願い】ユーザーの願いと合致しているか
-
-        【重要】
-        出力時は「**」などの太字記号や見出し記号（###）は一切使わず、
-        普通のテキストだけで出力してください。
-
-        【条件】
+        【入力情報】
+        ・苗字：{surname_instruction}
         ・対象：{target_type}
         ・性別：{gender}
         ・使いたい漢字：{use_kanji}
         ・避けたい漢字：{avoid_kanji}
-        ・願い：{wish}
-        
-        【出力形式】
-        **苗字は含めず、下の名前のみ**を出力してください。
+        ・願い・特徴：{wish}
+        ※画像が提供されている場合は、その視覚的イメージ（色、雰囲気、モチーフ）も強く反映してください。
 
-        ---
-        名前：〇〇（ヨミ）
-        [内訳]
-        ・響き：80点
-        ・字形：90点
-        ・独創：95点
-        ・可読：60点
-        ・願い：100点
+        【出力形式（JSON）】
+        必ず以下のJSONフォーマットのみを出力してください。余計な文章は不要です。
         
-        理由：〜〜〜
-        ---
+        {{
+            "names": [
+                {{
+                    "name": "名前の表記（例：大翔）",
+                    "yomi": "読み仮名（例：ヒロト）",
+                    "scores": {{
+                        "hibiki": 0〜100の整数,
+                        "jikei": 0〜100の整数,
+                        "doku": 0〜100の整数,
+                        "kadoku": 0〜100の整数,
+                        "negai": 0〜100の整数
+                    }},
+                    "reason": "命名の理由（100文字程度）"
+                }},
+                ...（計3つ）
+            ]
+        }}
         """
 
         # -------------------------------------------------------
-        # API呼び出しと表示処理
+        # API呼び出し
         # -------------------------------------------------------
-        with st.spinner("💎 苗字と世界観に合わせて分析中..."):
+        with st.spinner("💎 分析中..."):
             try:
-                # API呼び出し
+                # メッセージの構築（画像がある場合とない場合で分ける）
+                messages = []
+                if image_data_url:
+                    # 画像ありモード（マルチモーダル）
+                    messages = [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt},
+                                {"type": "image_url", "image_url": {"url": image_data_url}}
+                            ]
+                        }
+                    ]
+                else:
+                    # テキストのみモード
+                    messages = [{"role": "user", "content": prompt}]
+
+                # APIリクエスト（JSONモードを有効化）
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
-                    messages=[{"role": "user", "content": prompt}]
+                    messages=messages,
+                    response_format={"type": "json_object"}  # ★ここが重要！
                 )
                 
-                response_content = response.choices[0].message.content
-                st.success("分析が完了しました！")
+                # JSONとして結果を読み込む（正規表現はもう不要です！）
+                result_json = json.loads(response.choices[0].message.content)
+                name_list = result_json["names"] # リストを取得
 
-                # 結果を分割して処理
-                sections = response_content.split('---')
+                st.success("生成が完了しました！")
 
-                for section in sections:
-                    if "名前：" not in section:
-                        continue
-                    
-                    # 採点スコアの取得関数
-                    def get_score(pattern, text):
-                        match = re.search(pattern, text)
-                        return int(match.group(1)) if match else 50
+                # -------------------------------------------------------
+                # 結果の表示ループ
+                # -------------------------------------------------------
+                for item in name_list:
+                    name = item["name"]
+                    yomi = item["yomi"]
+                    reason = item["reason"]
+                    scores = item["scores"]
 
-                    s_hibiki = get_score(r"響き：(\d+)点", section)
-                    s_jikei  = get_score(r"字形：(\d+)点", section)
-                    s_doku   = get_score(r"独創：(\d+)点", section)
-                    s_kadoku = get_score(r"可読：(\d+)点", section)
-                    s_negai  = get_score(r"願い：(\d+)点", section)
+                    # レーダーチャート作成
+                    categories = ['響き', '字形', '独創', '可読', '願い']
+                    values = [
+                        scores["hibiki"], scores["jikei"], scores["doku"], 
+                        scores["kadoku"], scores["negai"]
+                    ]
+                    values += [values[0]]
+                    categories += [categories[0]]
 
-                    name_match = re.search(r"名前：(.*?)\n", section)
-                    if name_match:
-                        name = name_match.group(1).strip()
+                    fig = go.Figure(
+                        data=[
+                            go.Scatterpolar(
+                                r=values, theta=categories, fill='toself', name=name, line_color='#00CC96'
+                            )
+                        ]
+                    )
+                    fig.update_layout(
+                        polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+                        showlegend=False, height=250, margin=dict(t=20, b=20, l=30, r=30)
+                    )
+
+                    # UI表示
+                    with st.container(border=True):
+                        col_text, col_graph = st.columns([1.2, 1])
+                        with col_text:
+                            # 追加機能 5: コピーしやすいように st.code を使用
+                            st.caption("名前（コピーできます👇）")
+                            st.code(f"{name} ({yomi})", language=None)
+                            
+                            st.markdown(f"**理由**")
+                            st.write(reason)
                         
-                        # レーダーチャート作成
-                        categories = ['響き', '字形', '独創', '可読', '願い']
-                        values = [s_hibiki, s_jikei, s_doku, s_kadoku, s_negai]
-                        values += [values[0]]
-                        categories += [categories[0]]
+                        with col_graph:
+                            st.plotly_chart(fig, use_container_width=True)
 
-                        fig = go.Figure(
-                            data=[
-                                go.Scatterpolar(
-                                    r=values,
-                                    theta=categories,
-                                    fill='toself',
-                                    name=name,
-                                    line_color='#00CC96'
-                                )
-                            ]
-                        )
-
-                        fig.update_layout(
-                            polar=dict(
-                                radialaxis=dict(visible=True, range=[0, 100])
-                            ),
-                            showlegend=False,
-                            height=300,
-                            margin=dict(t=30, b=30, l=40, r=40)
-                        )
-
-                        # 画面表示
-                        with st.container(border=True):
-                            col_text, col_graph = st.columns([1, 1])
-                            with col_text:
-                                st.markdown(f"### {name}")
-                                st.markdown(section.replace("\n", "  \n"))
-                            with col_graph:
-                                st.plotly_chart(fig, use_container_width=True)
-
-                        # ★履歴データの保存（インデント修正済み）
-                        current_data = {
-                            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                            "対象": target_type,
-                            "名前": name,
-                            "生成候補": section
-                        }
-                        st.session_state.generated_names.append(current_data)
+                    # 履歴保存用のデータ作成
+                    current_data = {
+                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "対象": target_type,
+                        "名前": f"{name} ({yomi})",
+                        "理由": reason
+                    }
+                    st.session_state.generated_names.append(current_data)
 
             except Exception as e:
                 st.error(f"エラーが発生しました: {e}")
 
 # --------------------------------------------------
-# ダウンロードボタンの表示（if submit_btnの外側）
+# ダウンロードボタン
 # --------------------------------------------------
 if st.session_state.generated_names:
     df_log = pd.DataFrame(st.session_state.generated_names)
@@ -220,6 +228,7 @@ if st.session_state.generated_names:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
