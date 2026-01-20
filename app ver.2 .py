@@ -7,6 +7,10 @@ from openai import OpenAI       # OpenAIのAPIを利用するためのクラス
 import plotly.graph_objects as go  # グラフを描くためのライブラリ
 import re                          # 文字の中から数字を抜き出すためのライブラリ
 
+# セッション状態でデータを保持（アプリがリロードされるまで維持）
+if 'generated_names' not in st.session_state:
+    st.session_state.generated_names = []
+
 # その下にタイトル
 st.title("AI 命名支援ツール")
 
@@ -199,12 +203,34 @@ if submit_btn:
 
             except Exception as e:
                 st.error(f"エラーが発生しました: {e}")
+
+# データの追加処理
+current_data = {
+    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "対象": target_type,
+    "名前": name, # 名前も保存したほうが良いでしょう
+    "生成候補": response_content
+}
+st.session_state.generated_names.append(current_data)
+
+# サイドバーなどでダウンロードボタンを設置
+if st.session_state.generated_names:
+    df_log = pd.DataFrame(st.session_state.generated_names)
+    csv = df_log.to_csv(index=False).encode('utf-8-sig')
+    
+    st.sidebar.download_button(
+        label="履歴をCSVでダウンロード",
+        data=csv,
+        file_name=f"naming_log_{datetime.now().strftime('%Y%m%d')}.csv",
+        mime='text/csv',
+    )
 # ------------------------------
 # 評価アンケートへのリンクを表示
 # ------------------------------
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
