@@ -1,15 +1,3 @@
-# 1. 初期化
-response_content = ""
-sections = []
-
-# 2. UI
-if st.button("生成"):
-    response_content = generate_names()
-
-# 3. データ加工
-if response_content:
-    sections = response_content.split("\n\n")
-
 import re, os, logging
 from pathlib import Path
 from datetime import datetime
@@ -31,6 +19,20 @@ def get_score(pattern, text, default=50):
     return max(0, min(100, val))
 
 # ===== sections の定義（for文より前に必須）=====
+
+# 1. 初期化
+response_content = ""
+sections = []
+
+# 2. UI
+if st.button("生成"):
+    response_content = generate_names()
+
+# 3. データ加工
+if response_content:
+    sections = response_content.split("\n\n")
+
+
 sections = []
 if response_content and isinstance(response_content, str):
     sections = response_content.split("\n\n")
@@ -114,6 +116,7 @@ for section in sections:
 st.markdown("---")
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://docs.google.com/forms/your_form_id_here)")
+
 
 
 
