@@ -46,8 +46,18 @@ with st.expander("👇 入力条件を開く（ここをタップ）", expanded=
     with col4:
         avoid_kanji = st.text_input("避けたい漢字", placeholder="例：悪、死")
 
-    # 願いの入力
-    wish = st.text_area("どんな願いを込めますか？", placeholder="例：優しくて芯の強い子に育ってほしい")
+    # -------------------------------------------------------
+    # 追加機能：雰囲気タグ（st.pills）
+    # -------------------------------------------------------
+    st.markdown("##### 💡 どんな名前にしたい？（複数選択可）")
+    tags = st.pills(
+        "雰囲気をタグで選択",
+        ["古風", "モダン", "和風", "洋風", "知的", "元気", "中性的", "美しい", "かっこいい", "神秘的", "ユニーク"],
+        selection_mode="multi"
+    )
+
+    # 願いの入力（タグで言い表せない細かい要望用）
+    wish = st.text_area("その他の願い・詳細（任意）", placeholder="例：春生まれなので、温かいイメージを入れたい")
 
 # 画像アップロード機能の下にあるはずです
 uploaded_file = st.file_uploader("📸 写真やイラストからイメージする（任意）", type=['png', 'jpg', 'jpeg'])
@@ -89,7 +99,10 @@ if submit_btn:
         ・性別：{gender}
         ・使いたい漢字：{use_kanji}
         ・避けたい漢字：{avoid_kanji}
-        ・願い・特徴：{wish}
+        【重要：イメージ・雰囲気】
+        ・選択された雰囲気タグ：{", ".join(tags) if tags else "指定なし"}
+        ・具体的な願い：{wish}
+        ※「雰囲気タグ」と「具体的な願い」の両方を考慮して、イメージに合う名前を考案してください。
         ※画像が提供されている場合は、その視覚的イメージも反映してください。
 
         【最重要：名前の言語・文字種のルール】
@@ -247,6 +260,7 @@ if st.session_state.generated_names:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
