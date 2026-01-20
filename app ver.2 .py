@@ -49,13 +49,9 @@ with st.expander("👇 入力条件を開く（ここをタップ）", expanded=
     # 願いの入力
     wish = st.text_area("どんな願いを込めますか？", placeholder="例：優しくて芯の強い子に育ってほしい")
 
-    # 生成ボタン
-    submit_btn = st.button("✨ AIに名前を考えてもらう", use_container_width=True, type="primary")
-# 画像アップロード機能（追加機能 3）
-    uploaded_file = st.file_uploader("📸 写真やイラストからイメージする（任意）", type=['png', 'jpg', 'jpeg'])
-
-    # 生成ボタン
-    submit_btn = st.button("✨ AIに名前を考えてもらう", use_container_width=True, type="primary")
+# 画像アップロード機能の下にあるはずです
+uploaded_file = st.file_uploader(...)
+submit_btn = st.button("✨ AIに名前を考えてもらう", use_container_width=True, type="primary") # ← こっちは残す
 
 # --------------------------------------------------
 # 2. プロンプト（AIへの指示）と生成処理
@@ -228,6 +224,7 @@ if st.session_state.generated_names:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
