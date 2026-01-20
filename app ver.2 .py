@@ -42,9 +42,9 @@ with st.expander("👇 入力条件を開く（ここをタップ）", expanded=
     # 使いたい漢字・避けたい漢字
     col3, col4 = st.columns(2)
     with col3:
-        use_kanji = st.text_input("使いたい漢字", placeholder="例：翔、愛")
+        use_kanji = st.text_input("使いたい漢字（省略可）", placeholder="例：翔、愛")
     with col4:
-        avoid_kanji = st.text_input("避けたい漢字", placeholder="例：悪、死")
+        avoid_kanji = st.text_input("避けたい漢字(省略可）", placeholder="例：悪、死")
 
 # -------------------------------------------------------
     # 改良版：カテゴリ別タグ選択（アコーディオン形式）
@@ -291,6 +291,7 @@ if st.session_state.generated_names:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
