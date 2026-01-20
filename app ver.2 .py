@@ -25,8 +25,46 @@ response_content = ""
 sections = []
 
 # 2. UI
-if st.button("生成"):
-    response_content = generate_names()
+st.title("🧸 名前生成アプリ")
+
+with st.form("name_form"):
+    target_type = st.selectbox(
+        "対象",
+        ["人名", "キャラクター", "ペンネーム", "会社名"]
+    )
+
+    gender = st.radio(
+        "性別",
+        ["指定なし", "男性", "女性"]
+    )
+
+    use_kanji = st.text_input(
+        "使いたい漢字（任意）",
+        placeholder="例：空、光、優"
+    )
+
+    avoid_kanji = st.text_input(
+        "避けたい漢字（任意）",
+        placeholder="例：死、暗"
+    )
+
+    wish = st.text_area(
+        "込めたい願い・イメージ",
+        placeholder="例：やさしく、芯が強い"
+    )
+
+    submitted = st.form_submit_button("生成")
+    
+    if submitted:
+    response_content = generate_names(
+        target_type=target_type,
+        gender=gender,
+        use_kanji=use_kanji,
+        avoid_kanji=avoid_kanji,
+        wish=wish
+    )
+
+
 
 # 3. データ加工
 if response_content:
@@ -116,6 +154,7 @@ for section in sections:
 st.markdown("---")
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://docs.google.com/forms/your_form_id_here)")
+
 
 
 
