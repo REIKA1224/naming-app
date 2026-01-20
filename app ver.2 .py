@@ -55,7 +55,7 @@ with st.form("name_form"):
 
     submitted = st.form_submit_button("生成")
     
-    if submitted:
+if submitted:
     response_content = generate_names(
         target_type=target_type,
         gender=gender,
@@ -63,6 +63,7 @@ with st.form("name_form"):
         avoid_kanji=avoid_kanji,
         wish=wish
     )
+
 
 
 
@@ -154,6 +155,7 @@ for section in sections:
 st.markdown("---")
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://docs.google.com/forms/your_form_id_here)")
+
 
 
 
