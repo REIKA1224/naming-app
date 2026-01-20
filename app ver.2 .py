@@ -46,17 +46,46 @@ with st.expander("👇 入力条件を開く（ここをタップ）", expanded=
     with col4:
         avoid_kanji = st.text_input("避けたい漢字", placeholder="例：悪、死")
 
+# -------------------------------------------------------
+    # 改良版：カテゴリ別タグ選択（アコーディオン形式）
     # -------------------------------------------------------
-    # 追加機能：雰囲気タグ（st.pills）
-    # -------------------------------------------------------
-    st.markdown("##### 💡 どんな名前にしたい？（複数選択可）")
-    tags = st.pills(
-        "雰囲気をタグで選択",
-        ["古風", "モダン", "和風", "洋風", "知的", "元気", "中性的", "美しい", "かっこいい", "神秘的", "ユニーク"],
-        selection_mode="multi"
-    )
+    st.markdown("##### 💡 どんな名前にしたい？（カテゴリから選択）")
+    
+    # カテゴリとタグの定義
+    tag_categories = {
+        "🌟 基本のイメージ": ["明るい", "元気", "優しい", "クール", "可愛い", "知的", "上品", "ユニーク"],
+        "🍂 自然・季節": ["春", "夏", "秋", "冬", "海・水", "空・宇宙", "太陽", "月・星", "花・植物", "宝石"],
+        "👘 時代・雰囲気": ["古風", "モダン", "和風", "洋風", "レトロ", "未来風", "神秘的", "中性的"],
+        "⚔️ キャラ・物語": ["勇者", "悪役", "魔法使い", "騎士", "姫・貴族", "最強", "儚い", "狂気", "ゴシック"]
+    }
 
-    # 願いの入力（タグで言い表せない細かい要望用）
+    selected_tags = [] # 選ばれたタグをここに全部集める
+
+    # カテゴリごとに折りたたみメニュー（expander）を作成
+    for category_name, tags_list in tag_categories.items():
+        with st.expander(f"🔽 {category_name}", expanded=False):
+            # カテゴリごとにpillsを表示（keyを重複させないためにカテゴリ名をkeyにする）
+            selections = st.pills(
+                f"{category_name}を選択",
+                tags_list,
+                selection_mode="multi",
+                key=f"tag_{category_name}",
+                label_visibility="collapsed" # ラベルを隠してスッキリさせる
+            )
+            # 選ばれたタグをリストに追加
+            if selections:
+                selected_tags.extend(selections)
+
+    # 確認用（デバッグ用）：選ばれたタグを下に小さく表示
+    if selected_tags:
+        st.caption(f"選択中: {', '.join(selected_tags)}")
+    
+    # -------------------------------------------------------
+    # 変数の引き継ぎ（プロンプトに渡す変数を tags に統一）
+    # -------------------------------------------------------
+    tags = selected_tags 
+
+    # 願いの入力
     wish = st.text_area("その他の願い・詳細（任意）", placeholder="例：春生まれなので、温かいイメージを入れたい")
 
 # 画像アップロード機能の下にあるはずです
@@ -260,6 +289,7 @@ if st.session_state.generated_names:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
