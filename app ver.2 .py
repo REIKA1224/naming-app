@@ -18,6 +18,11 @@ def get_score(pattern, text, default=50):
     # clamp
     return max(0, min(100, val))
 
+# ===== sections の定義（for文より前に必須）=====
+sections = []
+if response_content and isinstance(response_content, str):
+    sections = response_content.split("\n\n")
+
 # --- 表示ループ（例） ---
 for section in sections:
     if "名前：" not in section:
@@ -97,6 +102,7 @@ for section in sections:
 st.markdown("---")
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://docs.google.com/forms/your_form_id_here)")
+
 
 
 
