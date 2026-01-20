@@ -14,7 +14,7 @@ if 'generated_names' not in st.session_state:
     st.session_state.generated_names = []
 
 # その下にタイトル
-st.title("AI 命名支援ツール")
+st.title("AI 命名支援ツール🧸")
 
 
 # OpenAIのクライアントを初期化
@@ -247,6 +247,7 @@ if st.session_state.generated_names:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+
 
 
 
