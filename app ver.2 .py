@@ -290,7 +290,8 @@ if st.session_state.generated_names:
 # ------------------------------
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
-st.markdown("[👉 Googleフォームで評価する](https://www.amazon.co.jp/)")
+st.markdown("[👉 Googleフォームで評価する]()")
+
 
 
 
