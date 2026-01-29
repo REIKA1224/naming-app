@@ -14,7 +14,7 @@ if 'generated_names' not in st.session_state:
     st.session_state.generated_names = []
 
 # その下にタイトル
-st.title("Namers AI　～AI命名支援ツール～")
+st.title("Namers AI　～AI名付け支援ツール～")
 
 
 # OpenAIのクライアントを初期化
@@ -25,10 +25,10 @@ client = OpenAI()
 # ------------------------------    
 with st.expander("👇 入力条件を開く（ここをタップ）", expanded=True):
     
-    st.markdown("### 📋 命名の条件")
+    st.markdown("### 📋 名付けの条件")
 
     # ジャンル選択
-    target_type = st.radio("命名する対象", ["人間", "ペット", "キャラクター"], horizontal=True)
+    target_type = st.radio("名付けする対象", ["人間", "ペット", "キャラクター"], horizontal=True)
 
     # 苗字と性別
     col1, col2 = st.columns(2)
@@ -291,6 +291,7 @@ if st.session_state.generated_names:
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
 st.markdown("[👉 Googleフォームで評価する]()")
+
 
 
 
