@@ -145,7 +145,7 @@ if submit_btn:
         3. 苗字なし・ファンタジー：世界観に合わせて自由選択
 
         【重要：評価システム】
-        以下の5項目で厳密に採点（各100点満点）してください。
+        以下の5項目で厳密に採点（各100点満点）してください。また、その評価は名前ごとに特徴をはっきりさせるために厳しめに評価してください。
         （響き、字形、独創、可読、願い）
 
         【出力形式（JSON）】
@@ -290,7 +290,8 @@ if st.session_state.generated_names:
 # ------------------------------
 st.markdown("---")  # 区切り線を表示
 st.markdown("### 評価アンケートはこちら")
-st.markdown("[👉 Googleフォームで評価する]()")
+st.markdown("[👉 Googleフォームで評価する](https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header)")
+
 
 
 
