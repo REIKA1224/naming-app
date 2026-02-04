@@ -289,10 +289,10 @@ if st.session_state.generated_names:
 # 評価アンケートへのリンクを表示
 # ------------------------------
 # サイドバーのコードの最後に追加
-with st.sidebar:
     st.markdown("---") # 区切り線を入れると綺麗
     st.markdown("### 🗣️ ご意見をお聞かせください")
     st.markdown("[👉 Googleフォームで評価する](https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header)")
+
 
 
 
