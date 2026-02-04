@@ -288,10 +288,20 @@ if st.session_state.generated_names:
 # ------------------------------
 # 評価アンケートへのリンクを表示
 # ------------------------------
-# サイドバーのコードの最後に追加
-    st.markdown("---") # 区切り線を入れると綺麗
-    st.markdown("### 🗣️ ご意見をお聞かせください")
-    st.markdown("[👉 Googleフォームで評価する](https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header)")
+# アプリのコードの一番下に追加
+st.markdown("---") # 区切り線
+col_feedback1, col_feedback2 = st.columns([2, 1]) # レイアウト調整
+
+with col_feedback1:
+    st.write("💡 アプリの改善にご協力ください！")
+
+with col_feedback2:
+    # これでボタンの見た目になります
+    st.link_button(
+        label="👉 アンケートに答える",
+        url="https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header",
+        use_container_width=True
+    )
 
 
 
