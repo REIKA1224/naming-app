@@ -298,10 +298,11 @@ with col_feedback1:
 with col_feedback2:
     # これでボタンの見た目になります
     st.link_button(
-        label="👉 アンケートに答える",
+        label="🧸アンケートに答える",
         url="https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header",
         use_container_width=True
     )
+
 
 
 
