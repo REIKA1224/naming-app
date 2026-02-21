@@ -238,7 +238,7 @@ with tab1:
 # --------------------------------------------------
 with tab2:
     st.markdown("### 💎 プレミアム詳細評価レポート")
-    st.write("ご自身で考えた名前や、最終候補に残った名前を多角的に分析し、客観的なリスクや印象を評価する専用モードです。")
+    st.write("ご自身で考えた名前や、最終候補に残った名前を多角的に分析し、客観的なリスクや印象を評価する専用モードです。（現在は試作段階のためコードは無料公開中です）")
     
     # noteなどのURLを入れる場所（ご自身のnoteのURLに書き換えてください）
     note_url = "https://note.com/あなたのID/記事のURL"
@@ -308,6 +308,7 @@ with col_feedback2:
         url="https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header",
         use_container_width=True
     )
+
 
 
 
