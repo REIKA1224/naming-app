@@ -19,7 +19,7 @@ st.title("Namers AI　～AI名付け支援ツール～")
 client = OpenAI()
 
 # =====================================================================
-# 👇 ここで画面を「無料（生成）」と「有料（評価）」の2つのタブに分けます
+# タブの作成：「無料（生成）」と「有料（評価）」
 # =====================================================================
 tab1, tab2 = st.tabs(["💡 名前を生成する (無料)", "💎 候補を評価する (プレミアム)"])
 
@@ -129,8 +129,11 @@ with tab1:
             3. 苗字なし・ファンタジー：世界観に合わせて自由選択
 
             【重要：評価システム】
-            以下の5項目で厳密に採点（各100点満点）してください。また、その評価は名前ごとに特徴をはっきりさせるために厳しめに評価してください。
+            以下の5項目（各100点満点）と、「総合得点（100点満点）」を厳密に採点してください。
             （響き、字形、独創、可読、願い）
+
+            ※「総合得点」は、単なる5項目の平均値ではなく、「名前としての全体のバランス・完成度」や「ユーザーの願いをどれだけ本質的に体現しているか」を加味して算出してください。
+            ※また、各評価は名前ごとに特徴をはっきりさせるために全体的に厳しめに（メリハリをつけて）採点してください。
 
             【出力形式（JSON）】
             必ず以下のJSONフォーマットのみを出力してください。
@@ -140,6 +143,7 @@ with tab1:
                         "name": "名前の表記",
                         "yomi": "読み仮名",
                         "scores": {{
+                            "total": 0〜100,
                             "hibiki": 0〜100,
                             "jikei": 0〜100,
                             "doku": 0〜100,
@@ -185,6 +189,8 @@ with tab1:
                         reason = item["reason"]
                         scores = item["scores"]
 
+                        # 総合得点の取得処理を追加
+                        s_total  = scores.get("total", scores.get("総合", 80))
                         s_hibiki = scores.get("hibiki", scores.get("響き", 50))
                         s_jikei  = scores.get("jikei",  scores.get("字形", 50))
                         s_doku   = scores.get("doku",   scores.get("独創", 50))
@@ -214,6 +220,9 @@ with tab1:
                         with st.container(border=True):
                             col_text, col_graph = st.columns([1.2, 1])
                             with col_text:
+                                # 総合評価のUI表示を追加
+                                st.metric(label="🏅 総合評価", value=f"{s_total}点")
+                                
                                 st.caption("名前（コピーできます👇）")
                                 st.code(f"{name} ({yomi})", language=None)
                                 st.markdown(f"**理由**")
@@ -226,6 +235,7 @@ with tab1:
                             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                             "対象": target_type,
                             "名前": f"{name} ({yomi})",
+                            "総合点": s_total,
                             "理由": reason
                         }
                         st.session_state.generated_names.append(current_data)
@@ -240,7 +250,6 @@ with tab2:
     st.markdown("### 💎 プレミアム詳細評価レポート")
     st.write("ご自身で考えた名前や、最終候補に残った名前を多角的に分析し、客観的なリスクや印象を評価する専用モードです。（現在は試作段階のためコードは無料公開中です）")
     
-    # noteなどのURLを入れる場所（ご自身のnoteのURLに書き換えてください）
     note_url = "https://note.com/namersai/n/nd1fda095acbc?sub_rt=share_pb"
     
     with st.container(border=True):
@@ -255,14 +264,14 @@ with tab2:
             st.write("")
             st.link_button("コードを取得(noteへ)", note_url, use_container_width=True)
 
-    # パスワード判定（ここでは仮に namers2026 としています）
+    # パスワード判定
     SECRET_CODE = "copenhagen"
     
     if user_password == SECRET_CODE:
         st.success("✅ 認証成功！プレミアム機能が解放されました。")
         
         # -----------------------------------------
-        # ここに評価機能のUIを配置（例）
+        # ここに評価機能のUIを配置（モックアップ）
         # -----------------------------------------
         st.markdown("#### 📝 評価したい名前を入力してください")
         eval_surname = st.text_input("苗字", key="eval_surname")
@@ -308,21 +317,6 @@ with col_feedback2:
         url="https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header",
         use_container_width=True
     )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
