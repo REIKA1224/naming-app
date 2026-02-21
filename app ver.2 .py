@@ -256,7 +256,7 @@ with tab2:
             st.link_button("👉 コードを取得（noteへ）", note_url, use_container_width=True)
 
     # パスワード判定（ここでは仮に namers2026 としています）
-    SECRET_CODE = "namers2026"
+    SECRET_CODE = "copenhagen"
     
     if user_password == SECRET_CODE:
         st.success("✅ 認証成功！プレミアム機能が解放されました。")
@@ -308,6 +308,7 @@ with col_feedback2:
         url="https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header",
         use_container_width=True
     )
+
 
 
 
