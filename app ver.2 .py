@@ -253,7 +253,7 @@ with tab2:
         with col_link:
             st.write("") # 高さ調整
             st.write("")
-            st.link_button("👉 コードを取得（noteへ）", note_url, use_container_width=True)
+            st.link_button("コードを取得(noteへ)", note_url, use_container_width=True)
 
     # パスワード判定（ここでは仮に namers2026 としています）
     SECRET_CODE = "copenhagen"
@@ -308,6 +308,7 @@ with col_feedback2:
         url="https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header",
         use_container_width=True
     )
+
 
 
 
