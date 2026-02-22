@@ -202,7 +202,7 @@ with tab2:
         st.markdown("#### 📝 診断したい名前の情報を入力してください")
         
         # 評価用により詳細な入力項目を用意
-        eval_target = st.selectbox("命名の対象", ["人間（子供など）", "創作キャラクター", "企業・サービス・屋号（BtoB）", "ペット"])
+        eval_target = st.selectbox("命名の対象", ["人間（子供など）", "創作キャラクター", "企業・サービス・屋号", "ペット"])
         eval_wish = st.text_area("この名前に込めた想いや、想定する世界観（任意）", placeholder="例：誠実で信頼感のある会社にしたい、ファンタジー世界のエルフの騎士、など")
         
         col_e1, col_e2, col_e3 = st.columns(3)
@@ -331,6 +331,7 @@ with col_feedback1:
     st.write("💡 アプリの改善にご協力ください！")
 with col_feedback2:
     st.link_button("🧸アンケートに答える", "https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header", use_container_width=True)
+
 
 
 
