@@ -186,7 +186,7 @@ with tab2:
     note_url = "https://note.com/namersai/n/nd1fda095acbc?sub_rt=share_pb"
     
     with st.container(border=True):
-        st.markdown("🔒 **この機能を利用するにはアクセスコードが必要です。**")
+        st.markdown("🔒 **この機能を利用するにはアクセスコードが必要です。（現在は無料公開中！）**")
         col_input, col_link = st.columns([2, 1])
         with col_input:
             user_password = st.text_input("アクセスコードを入力", type="password", placeholder="例：namers2026")
@@ -331,6 +331,7 @@ with col_feedback1:
     st.write("💡 アプリの改善にご協力ください！")
 with col_feedback2:
     st.link_button("🧸アンケートに答える", "https://docs.google.com/forms/d/e/1FAIpQLScEKP2qdJ49NgbjOrq27T4fDaPIXTqrUO74wdFMxMhtwdylPQ/viewform?usp=header", use_container_width=True)
+
 
 
 
